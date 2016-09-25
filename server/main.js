@@ -16,6 +16,7 @@ var getEmail = function () {
 Meteor.methods({
   addTask: function (task) {
     task.email = getEmail();
+    task.owner = Meteor.userId();
     Tasks.validateInsert(Meteor.userId(), task);
     Tasks.insert(task);
   },
@@ -34,6 +35,7 @@ Meteor.methods({
       Tasks.validateUpdate(Meteor.userId(), {$set: task});
     } else {
       task.email = getEmail();
+      task.owner = Meteor.userId();
       Tasks.validateInsert(Meteor.userId(), task);
     }
     Tasks.upsert(id, task);
