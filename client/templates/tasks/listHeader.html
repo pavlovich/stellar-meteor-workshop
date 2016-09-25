@@ -2,7 +2,12 @@
 <template name="taskListHeader">
     <header class="task-list-header">
         <h1>Task List</h1>
-        <div class="login-control">
+        <div class="login-control"smh11>
+            {{#if photoUrl}}
+                <div class="photo">
+                    <img src="{{photoUrl}}"/>
+                </div>
+            {{/if}}
           {{> loginButtons align="right"}}
         </div>
     </header>
