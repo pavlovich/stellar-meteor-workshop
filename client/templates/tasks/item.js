@@ -24,6 +24,14 @@ function taskMasterController(currentMeteorUser, selectedTask){
     canUpdate: function () {
       return isOwner();
     },
+    canComplete: function () {
+      return !vm.task.private || isOwner();
+    },
+    toggleChecked: function ($event) {
+      $event.stopPropagation();
+      Meteor.call("setChecked", vm.task._id, vm.task.checked);
+      selectedTask.clear();
+    },
     togglePrivate: function ($event) {
       $event.stopPropagation();
       Meteor.call("setPrivate", vm.task._id, !vm.task.private);

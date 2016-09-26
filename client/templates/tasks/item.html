@@ -1,5 +1,7 @@
 <li ng-click="$ctrl.selectTask()"
-    ng-class="['task-item', {'can-update': $ctrl.canUpdate(), 'selected-task': $ctrl.isSelected(), 'private': $ctrl.task.private}]">
+    ng-class="['task-item', {'can-update': $ctrl.canUpdate(), 'selected-task': $ctrl.isSelected(), 'checked': $ctrl.task.checked, 'private': $ctrl.task.private}]">
+    <input ng-if="$ctrl.canComplete()" ng-click="$ctrl.toggleChecked($event)" type="checkbox"
+           ng-model="$ctrl.task.checked" class="toggle-checked"/>
     <button ng-if="$ctrl.canUpdate()" ng-click="$ctrl.togglePrivate($event)" class="toggle-private">
       <span ng-if="$ctrl.task.private">
       Private</span>
