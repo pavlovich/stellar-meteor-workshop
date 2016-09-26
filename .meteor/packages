@@ -27,3 +27,6 @@ twbs:bootstrap
 stylus
 ian:accounts-ui-bootstrap-3
 accounts-password
+ejson
+iron:router
+zimme:active-route
