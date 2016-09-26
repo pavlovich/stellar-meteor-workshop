@@ -15,8 +15,10 @@ var getEmail = function () {
 
 Meteor.methods({
   addTask: function (task) {
+    task.checked = false;
     task.email = getEmail();
     task.owner = Meteor.userId();
+    task.createdAt = Date.now();
     Tasks.validateInsert(Meteor.userId(), task);
     Tasks.insert(task);
   },
@@ -34,8 +36,10 @@ Meteor.methods({
     if (id) {
       Tasks.validateUpdate(Meteor.userId(), {$set: task});
     } else {
+      task.checked = false;
       task.email = getEmail();
       task.owner = Meteor.userId();
+      task.createdAt = Date.now;
       Tasks.validateInsert(Meteor.userId(), task);
     }
     Tasks.upsert(id, task);
@@ -43,7 +47,7 @@ Meteor.methods({
   setPrivate: function (id, setToPrivate) {
     var task = Tasks.findOne(id);
     if (task.owner && task.owner !== Meteor.userId()) {
-      throw new Meteor.Error("not-authorized");
+      throw new Meteor.Error("Only the task owner can change privacy settings!");
     }
 
     Tasks.update(id, {$set: {private: setToPrivate}});
@@ -52,7 +56,7 @@ Meteor.methods({
     var task = Tasks.findOne(taskId);
     if (task.private && task.owner !== Meteor.userId()) {
       // If the task is private, make sure only the owner can check it off
-      throw new Meteor.Error("not-authorized");
+      throw new Meteor.Error("Only the task owner can complete private tasks!");
     }
 
     Tasks.update(taskId, {$set: {checked: setChecked}});

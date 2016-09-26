@@ -1,17 +1,24 @@
 Tasks = new Mongo.Collection("tasks");
 
 if (Meteor.isClient) {
-  Meteor.subscribe('tasks');
+  // Meteor.subscribe('tasks');
 }
 
 if (Meteor.isServer) {
 
-  Meteor.publish("tasks", function () {
-    return Tasks.find(
-      {
-        $or: [
-          {private: {$ne: true}},
-          {owner: this.userId}
+  Meteor.publish("tasks", function (includeCompleted) {
+    var include = includeCompleted ? 'placeholder' : true;
+    return Tasks.find({
+        $and: [
+          {
+            $or: [
+              {private: {$ne: true}},
+              {owner: this.userId}
+            ]
+          },
+          {
+            checked: {$ne: include}
+          }
         ]
       }
     );
@@ -54,11 +61,11 @@ if (Meteor.isServer) {
           // This is a strange thing. Angular uses this to keep track of objects in lists.
           // Mongo doesn't like the property name because it starts with $. But we should
           // not be adding it anyway as it is polluting our model space. Delete it!
-          delete modifier.$set.$hashKey;
+          delete modifier.$set.$$hashKey;
           if (!task.owner || (task.owner == userId)) {
-            if (_.isNull(modifier.$set.name) || modifier.$set.name == undefined) {
+            if(_.isNull(modifier.$set.name) || modifier.$set.name == undefined) {
               return true;
-            } else {
+            }else {
               if (isGoodString(modifier.$set.name)) {
                 return true;
               } else {
@@ -66,12 +73,24 @@ if (Meteor.isServer) {
               }
             }
           } else {
-            throw new Meteor.Error("You can only update your own tasks!")
+            var keys = _.keys(modifier.$set);
+            if (!task.private) {
+              delete keys.checked;
+            }else{
+              if(keys.indexOf('checked') > -1){
+                throw new Meteor.Error("You can't complete private tasks you don't own.");
+              }
+            }
+            if (keys.length > 0) {
+              throw new Meteor.Error("You can only update your own tasks!");
+            } else {
+              return true;
+            }
           }
-        } else {
+        }else {
           throw new Meteor.Error("You must provide a valid Task Identifier!");
         }
-      } else {
+      }else{
         return true;
       }
     }

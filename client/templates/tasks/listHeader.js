@@ -1,5 +1,8 @@
 function listHeaderController ($scope, $reactive) {
   $reactive(this).attach($scope);
+  this.subscribe('tasks', () => {
+    return [!this.getReactively('hideCompleted')];
+  });
 }
 
 angular.module('taskMaster')

@@ -1,3 +1,10 @@
 <header class="task-list-header">
-  <h1>Task List</h1>
+    <h1>Task List</h1>
+
+    <div class="filter">
+        <label class="hide-completed">
+            <input type="checkbox" ng-model="$ctrl.hideCompleted" ng-clickx="$ctrl.toggleHideCompleted()"/>
+            Hide Completed Tasks
+        </label>
+    </div>
 </header>
