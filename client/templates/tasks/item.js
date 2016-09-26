@@ -24,6 +24,11 @@ function taskMasterController(currentMeteorUser, selectedTask){
     canUpdate: function () {
       return isOwner();
     },
+    togglePrivate: function ($event) {
+      $event.stopPropagation();
+      Meteor.call("setPrivate", vm.task._id, !vm.task.private);
+      selectedTask.clear();
+    },
     deleteTask: function () {
       var toDelete = vm.task;
       vm.task = {};
