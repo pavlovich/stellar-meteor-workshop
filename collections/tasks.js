@@ -32,17 +32,25 @@ if(Meteor.isServer){
         } else {
           task = null;
         }
-        // Cannot update the _id property, so remove it if it is in the 'change set'.
-        delete modifier.$set._id;
         if (task) {
-          if (_.isNull(modifier.$set.name) || modifier.$set.name == undefined) {
-            return true;
-          } else {
-            if (isGoodString(modifier.$set.name)) {
+          // Cannot update the _id property, so remove it if it is in the 'change set'.
+          delete modifier.$set._id;
+          // This is a strange thing. Angular uses this to keep track of objects in lists.
+          // Mongo doesn't like the property name because it starts with $. But we should
+          // not be adding it anyway as it is polluting our model space. Delete it!
+          delete modifier.$set.$hashKey;
+          if (!task.owner || (task.owner == userId)) {
+            if (_.isNull(modifier.$set.name) || modifier.$set.name == undefined) {
               return true;
             } else {
-              throw new Meteor.Error("Tasks can't be blank!");
+              if (isGoodString(modifier.$set.name)) {
+                return true;
+              } else {
+                throw new Meteor.Error("Tasks can't be blank!");
+              }
             }
+          } else {
+            throw new Meteor.Error("You can only update your own tasks!")
           }
         } else {
           throw new Meteor.Error("You must provide a valid Task Identifier!");
@@ -54,8 +62,16 @@ if(Meteor.isServer){
     return false;
   };
 
-  Tasks.validateDelete = function (userId, doc) {
-    return isLoggedInUser(userId);
+  Tasks.validateDelete = function (userId, task) {
+    if (isLoggedInUser(userId)) {
+      if (!task.owner || task.owner == userId) {
+        return true;
+      } else {
+        throw new Meteor.Error("You can only update your own tasks!")
+      }
+    } else {
+      throw new Meteor.Error("Try logging in first!");
+    }
   };
 
   Tasks.allow({
@@ -69,6 +85,5 @@ if(Meteor.isServer){
       throw new Meteor.Error("This function is disabled!");
     }
   });
-
 
 }

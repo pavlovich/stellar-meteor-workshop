@@ -13,6 +13,9 @@ Template.taskItem.helpers({
   },
   canDelete: function () {
     return isOwner(this);
+  },
+  canUpdate: function () {
+    return isOwner(this);
   }
 });
 
@@ -21,7 +24,7 @@ Template.taskItem.events({
     Meteor.call('deleteTask', this, Template.handleTaskErrors);
     return false;
   },
-  "click .task-item": function () {
+  "click .can-update": function () {
     Session.set('selectedTask', isSelected(this) ? null : this);
     $('.new-task>input').focus();
   }

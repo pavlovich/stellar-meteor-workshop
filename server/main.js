@@ -25,9 +25,9 @@ Meteor.methods({
     Tasks.validateUpdate(Meteor.userId(), {$set: task});
     Tasks.update(id, {$set: task});
   },
-  deleteTask: function (doc) {
-    Tasks.validateDelete(Meteor.userId(), doc);
-    Tasks.remove(doc._id);
+  deleteTask: function (task) {
+    Tasks.validateDelete(Meteor.userId(), task);
+    Tasks.remove(task._id);
   },
   upsertTask: function (task) {
     var id = task._id;
