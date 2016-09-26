@@ -1,9 +1,9 @@
-Template.taskListHeader.helpers({
-  photoUrl: function(){
-    try{
-      return Meteor.user().services.facebook.photoUrl;
-    }catch(e){
-      return null;
-    }
-  }
-});
+function listHeaderController ($scope, $reactive) {
+  $reactive(this).attach($scope);
+}
+
+angular.module('taskMaster')
+  .component('listHeader', {
+    templateUrl: 'client/templates/tasks/listHeader.html',
+    controller: ['$scope', '$reactive', listHeaderController]
+  });

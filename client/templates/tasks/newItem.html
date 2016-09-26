@@ -1,7 +1,3 @@
-<template name="newTask">
-  {{#if currentUser}}
-      <form class="new-task">
-          <input type="text" name="text" placeholder="{{placeholderText}}" value="{{selectedTaskText}}"/>
-      </form>
-  {{/if}}
-</template>
+<form name="newTask" class="new-task" ng-if="$ctrl.loggedIn()" ng-submit="$ctrl.submitTask()">
+  <input type="text" name="text" placeholder="{{$ctrl.placeholderText()}}" ng-model="$ctrl.session.task.name"/>
+</form>

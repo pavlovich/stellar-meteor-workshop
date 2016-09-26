@@ -1,34 +1,34 @@
-Template.newTask.events({
-  "submit .new-task": function (event) {
-    var text = event.target.text.value;
+function newTaskController (currentMeteorUser, selectedTask) {
+  var vm = this;
 
-    var task = Session.get('selectedTask') || {};
-    task.name = text;
+  vm.session = selectedTask;
 
-    Session.set('selectedTask', null);
+  _.extend(vm, {
 
-    if (task._id) {
-      //Tasks.update(task._id, {$set: {name: task.name}}, Template.handleTaskErrors);
-      Meteor.call('updateTask', task, Template.handleTaskErrors);
-    } else {
-      //Tasks.insert(task, Template.handleTaskErrors);
-      Meteor.call('addTask', task, Template.handleTaskErrors);
+    loggedIn: function () {
+      return currentMeteorUser.get();
+    },
+    submitTask: function () {
+      if (selectedTask.task._id) {
+        Meteor.call('updateTask', selectedTask.task, angular.handleTaskErrors);
+      } else {
+        Meteor.call('addTask', selectedTask.task, angular.handleTaskErrors);
+      }
+
+      //Meteor.call('upsertTask', selectedTask.task, angular.handleTaskErrors);
+
+      selectedTask.clear();
+
+    },
+    placeholderText: function () {
+      return selectedTask.task._id ? "Enter some text for this Task description" : "Type here to add new tasks";
     }
 
-    // Meteor.call('upsertTask', task, Template.handleTaskErrors);
+  })
+}
 
-    event.target.text.value = "";
-
-    return false;
-  }
-});
-
-Template.newTask.helpers({
-  'selectedTaskText': function(){
-    var selectedTask = Session.get('selectedTask');
-    return selectedTask ? selectedTask.name : '';
-  },
-  'placeholderText': function(){
-    return Session.get('selectedTask') ? "Enter some text for this Task description" : "Type here to add new tasks";
-  }
-});
+angular.module('taskMaster')
+  .component('newTask', {
+    templateUrl: 'client/templates/tasks/newItem.html',
+    controller: ['currentMeteorUser', 'selectedTask', newTaskController]
+  });

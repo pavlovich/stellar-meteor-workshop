@@ -1,12 +1,6 @@
-
-<template name="taskItem">
-    <li class="task-item {{#if canUpdate}}can-update{{/if}}{{#if selected}} selected-task{{/if}}">
-        {{name}}
-        {{#if email}}
-            <span class="email">{{email}}</span>
-        {{/if}}
-        {{#if canDelete}}
-            <button class="delete-button">&times;</button>
-        {{/if}}
-    </li>
-</template>
+<li ng-click="$ctrl.selectTask()"
+    ng-class="['task-item', {'can-update': $ctrl.canUpdate(), 'selected-task': $ctrl.isSelected()}]">
+  <span class="text">{{$ctrl.task.name}}</span>
+  <span class="email" ng-if="$ctrl.task.email">{{$ctrl.task.email}}</span>
+  <button class="delete-button" ng-if="$ctrl.canDelete()" ng-click="$ctrl.deleteTask()">&times;</button>
+</li>

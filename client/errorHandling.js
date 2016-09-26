@@ -24,4 +24,4 @@ function errorHandler(error) {
   }
 }
 
-Template.handleTaskErrors = errorHandler;
+angular.handleTaskErrors = errorHandler;

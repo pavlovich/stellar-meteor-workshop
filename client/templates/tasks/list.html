@@ -1,8 +1,3 @@
-
-<template name="taskList">
-    <ul class="task-list">
-        {{#each tasks}}
-            {{> taskItem}}
-        {{/each}}
-    </ul>
-</template>
+<ul class="task-list">
+  <task-item task="task" ng-repeat="task in $ctrl.tasks"></task-item>
+</ul>

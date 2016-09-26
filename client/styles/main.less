@@ -42,6 +42,7 @@ body {
 
     }
   }
+
   .master-heading {
     width: 100%;
     margin-top: 100px;
@@ -70,6 +71,16 @@ body {
 
       background: linear-gradient(to bottom, @midtone, @light 100%);
       border-bottom: @standard-separator 2px;
+
+      .filter {
+        position: absolute;
+        bottom: 15px;
+        right: 10px;
+
+        label {
+          font-weight: normal;
+        }
+      }
     }
 
     .task-list {
@@ -98,6 +109,31 @@ body {
 
       &.selected-task {
         background-color: @selected !important;
+      }
+
+      &.private {
+        background: @highlight;
+        border-color: @dark;
+      }
+
+      &.checked {
+        background: @midtone;
+        border-bottom: @text 1px solid;
+        .text {
+          text-decoration: line-through;
+          color: @dark;
+        }
+      }
+
+      .toggle-checked {
+        margin-right: 5px;
+      }
+
+      .toggle-private {
+        height: auto;
+        border-radius: 5%;
+        margin-right: 3px;
+        width: 60px;
       }
 
       .email {
@@ -140,6 +176,11 @@ body {
         }
       }
     }
+
   }
 
+}
+
+login-buttons {
+  float: right;
 }
